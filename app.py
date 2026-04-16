@@ -9,7 +9,7 @@ from services.site_service import (
     update_site_metadata,
 )
 from services.nginx_service import test_nginx, reload_nginx
-from services.ssl_service import ssl_instructions
+from services.ssl_service import install_ssl
 from ui.menu import banner, clear_screen, error, info, main_menu, pause, section, success, warn
 from utils.validators import is_valid_domain, yes_no
 
@@ -188,8 +188,8 @@ def nginx_test_flow() -> None:
 
 
 
-def ssl_help_flow() -> None:
-    section("PANDUAN SSL")
+def install_ssl_flow() -> None:
+    section("INSTALL SSL (CERTBOT)")
     if not display_sites_table():
         return
     try:
@@ -201,7 +201,7 @@ def ssl_help_flow() -> None:
     if not row:
         error("Website tidak ditemukan.")
         return
-    print(ssl_instructions(row.domain, bool(row.cloudflare_proxied)))
+    install_ssl(row.domain, bool(row.cloudflare_proxied))
 
 
 
@@ -227,7 +227,7 @@ def main() -> None:
         elif choice == "6":
             nginx_test_flow()
         elif choice == "7":
-            ssl_help_flow()
+            install_ssl_flow()
         elif choice == "0":
             print("Sampai jumpa.")
             break

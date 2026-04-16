@@ -45,5 +45,5 @@ def main_menu() -> None:
     print("4. Update metadata website")
     print("5. Hapus website")
     print("6. Jalankan nginx -t")
-    print("7. Tampilkan langkah SSL / Cloudflare")
+    print("7. Install Sertifikat SSL (Certbot)")
     print("0. Keluar")

@@ -1,26 +1,29 @@
 from config import LETSENCRYPT_LIVE
 
 
-def ssl_instructions(domain: str, proxied: bool) -> str:
+import subprocess
+from ui.menu import info, error
+
+def install_ssl(domain: str, proxied: bool) -> None:
     mode = "Full (strict)" if proxied else "Direct / DNS only"
     cert_path = LETSENCRYPT_LIVE / domain / "fullchain.pem"
     key_path = LETSENCRYPT_LIVE / domain / "privkey.pem"
-    return f"""
-Langkah SSL untuk {domain}
-=========================
-1. Pastikan DNS domain sudah mengarah ke IP VPS.
-2. Untuk proses awal certbot, disarankan set record ke DNS only terlebih dahulu.
-3. Jalankan:
-   sudo apt update
-   sudo apt install certbot python3-certbot-nginx -y
-   sudo certbot --nginx -d {domain}
-4. Saat ditanya redirect, pilih Redirect agar HTTP otomatis ke HTTPS.
-5. Setelah berhasil, cek file sertifikat:
-   {cert_path}
-   {key_path}
-6. Kalau memakai Cloudflare proxied, set SSL/TLS mode ke: {mode}
-7. Uji konfigurasi:
-   sudo nginx -t
-   sudo systemctl reload nginx
-   sudo ss -tulpn | grep ':80\\|:443'
-""".strip()
+    
+    info("1. Pastikan DNS domain sudah mengarah ke IP VPS.")
+    info("2. Untuk proses awal certbot, disarankan set record ke DNS only terlebih dahulu.")
+    print("Mempersiapkan instalasi Certbot...")
+    
+    try:
+        subprocess.run(["apt-get", "update"], check=True)
+        subprocess.run(["apt-get", "install", "certbot", "python3-certbot-nginx", "-y"], check=True)
+        
+        print("\n=== MENJALANKAN CERTBOT ===")
+        print("Silakan ikuti instruksi pengisian email dan redirect di bawah ini secara manual:")
+        subprocess.run(["certbot", "--nginx", "-d", domain], check=True)
+        
+        info(f"Sertifikat berhasil diinstal di {cert_path}")
+        if proxied:
+            info(f"Karena Anda memakai Cloudflare, pastikan set SSL/TLS mode di Cloudflare ke: {mode}")
+            
+    except subprocess.CalledProcessError as exc:
+        error(f"Gagal menginstal SSL: {exc}")
