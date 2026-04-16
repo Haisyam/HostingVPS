@@ -201,7 +201,9 @@ def install_ssl_flow() -> None:
     if not row:
         error("Website tidak ditemukan.")
         return
-    install_ssl(row.domain, bool(row.cloudflare_proxied))
+    if install_ssl(row.domain, bool(row.cloudflare_proxied)):
+        update_site_metadata(site_id, 1, row.cloudflare_proxied, row.notes)
+        success("Status SSL diubah menjadi aktif (1) di database.")
 
 
 

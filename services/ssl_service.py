@@ -4,7 +4,7 @@ from config import LETSENCRYPT_LIVE
 import subprocess
 from ui.menu import info, error
 
-def install_ssl(domain: str, proxied: bool) -> None:
+def install_ssl(domain: str, proxied: bool) -> bool:
     mode = "Full (strict)" if proxied else "Direct / DNS only"
     cert_path = LETSENCRYPT_LIVE / domain / "fullchain.pem"
     key_path = LETSENCRYPT_LIVE / domain / "privkey.pem"
@@ -24,6 +24,7 @@ def install_ssl(domain: str, proxied: bool) -> None:
         info(f"Sertifikat berhasil diinstal di {cert_path}")
         if proxied:
             info(f"Karena Anda memakai Cloudflare, pastikan set SSL/TLS mode di Cloudflare ke: {mode}")
-            
+        return True
     except subprocess.CalledProcessError as exc:
         error(f"Gagal menginstal SSL: {exc}")
+        return False
