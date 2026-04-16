@@ -70,21 +70,28 @@ def add_site_flow() -> None:
 
 
 
-def list_sites_flow() -> None:
-    section("DAFTAR WEBSITE")
+def display_sites_table() -> bool:
     rows = list_sites()
     if not rows:
         warn("Belum ada website tersimpan.")
-        return
+        return False
     print(f"{'ID':<4} {'DOMAIN':<28} {'TYPE':<10} {'SSL':<5} {'CF':<5}")
     print("-" * 62)
     for row in rows:
         print(f"{row.id:<4} {row.domain:<28} {row.site_type:<10} {row.ssl_enabled:<5} {row.cloudflare_proxied:<5}")
+    print()
+    return True
+
+def list_sites_flow() -> None:
+    section("DAFTAR WEBSITE")
+    display_sites_table()
 
 
 
 def detail_site_flow() -> None:
     section("DETAIL WEBSITE")
+    if not display_sites_table():
+        return
     try:
         site_id = int(input("Masukkan ID website: ").strip())
     except ValueError:
@@ -110,6 +117,8 @@ def detail_site_flow() -> None:
 
 def update_site_flow() -> None:
     section("UPDATE METADATA WEBSITE")
+    if not display_sites_table():
+        return
     try:
         site_id = int(input("Masukkan ID website: ").strip())
     except ValueError:
@@ -131,6 +140,8 @@ def update_site_flow() -> None:
 
 def delete_site_flow() -> None:
     section("HAPUS WEBSITE")
+    if not display_sites_table():
+        return
     try:
         site_id = int(input("Masukkan ID website yang akan dihapus: ").strip())
     except ValueError:
@@ -179,6 +190,8 @@ def nginx_test_flow() -> None:
 
 def ssl_help_flow() -> None:
     section("PANDUAN SSL")
+    if not display_sites_table():
+        return
     try:
         site_id = int(input("Masukkan ID website: ").strip())
     except ValueError:
