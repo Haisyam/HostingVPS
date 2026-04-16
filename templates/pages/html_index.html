@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ domain }} aktif</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: #e2e8f0;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card {
+            max-width: 760px;
+            margin: 24px;
+            padding: 40px;
+            border-radius: 22px;
+            background: rgba(15, 23, 42, 0.92);
+            box-shadow: 0 18px 45px rgba(0,0,0,.28);
+        }
+        .badge {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: #16a34a;
+            color: white;
+            font-weight: bold;
+            margin-bottom: 18px;
+        }
+        h1 { font-size: 2.2rem; margin: 0 0 12px; }
+        p { line-height: 1.7; color: #cbd5e1; }
+        code {
+            background: #111827;
+            padding: 2px 8px;
+            border-radius: 8px;
+            color: #93c5fd;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="badge">Website Aktif</div>
+        <h1>{{ domain }} telah aktif</h1>
+        <p>Selamat, website statis HTML untuk domain <code>{{ domain }}</code> sudah aktif di VPS ini.</p>
+        <p>Halaman ini dibuat otomatis oleh <strong>VPS Website Manager</strong>. Kamu bisa mengganti file <code>index.html</code> dengan landing page milikmu kapan saja.</p>
+    </div>
+</body>
+</html>

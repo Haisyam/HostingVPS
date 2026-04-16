@@ -1,0 +1,2 @@
+# Tidak ada dependency eksternal.
+# Project ini hanya memakai standard library Python.
