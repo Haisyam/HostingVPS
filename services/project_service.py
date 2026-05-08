@@ -45,7 +45,7 @@ def create_project_files(domain: str, site_type: str, port: int = None) -> Proje
     elif site_type == "nodejs":
         write_text(paths.project_root / "README_SETUP.txt", nodejs_notes(domain, port))
         write_text(paths.project_root / "app.js", NODEJS_SAMPLE.replace("{{ port }}", str(port)).replace("{{ domain }}", domain))
-        write_text(paths.project_root / "ecosystem.config.js", PM2_SAMPLE.replace("{{ domain }}", domain))
+        write_text(paths.project_root / "ecosystem.config.cjs", PM2_SAMPLE.replace("{{ domain }}", domain))
 
     return paths
 
@@ -76,4 +76,4 @@ def ci4_notes(domain: str) -> str:
     return f"""CodeIgniter 4 placeholder untuk {domain}\n\nLangkah lanjutan:\n1. Upload / clone project CI4 ke {WEB_ROOT_BASE / domain}\n2. Pastikan web root mengarah ke folder public\n3. Install PHP, Composer, dan extension yang dibutuhkan\n4. Jalankan nginx -t lalu reload nginx\n5. Pasang SSL dengan certbot bila domain sudah resolve\n"""
 
 def nodejs_notes(domain: str, port: int) -> str:
-    return f"""Node.js placeholder untuk {domain}\n\nLangkah lanjutan:\n1. Pastikan Node.js dan PM2 terinstall.\n2. Upload / clone project Node.js Anda ke {WEB_ROOT_BASE / domain}.\n3. Buka terminal, masuk ke direktori tersebut.\n4. Jalankan `npm install` jika ada dependencies.\n5. Jalankan `pm2 start ecosystem.config.js`.\n6. Jalankan `pm2 save` untuk menyimpan konfigurasi.\n7. Jalankan nginx -t lalu reload nginx.\n8. Pasang SSL dengan certbot bila domain sudah resolve.\n"""
+    return f"""Node.js placeholder untuk {domain}\n\nLangkah lanjutan:\n1. Pastikan Node.js dan PM2 terinstall.\n2. Upload / clone project Node.js Anda ke {WEB_ROOT_BASE / domain}.\n3. Buka terminal, masuk ke direktori tersebut.\n4. Jalankan `npm install` jika ada dependencies.\n5. Jalankan `pm2 start ecosystem.config.cjs`.\n6. Jalankan `pm2 save` untuk menyimpan konfigurasi.\n7. Jalankan nginx -t lalu reload nginx.\n8. Pasang SSL dengan certbot bila domain sudah resolve.\n"""

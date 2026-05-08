@@ -18,7 +18,7 @@ SUPPORTED_SITE_TYPES = ["html", "php", "laravel", "ci4", "nodejs"]
 HTML_INDEX_TEMPLATE = BASE_DIR / "templates" / "pages" / "html_index.html"
 PHP_INDEX_TEMPLATE = BASE_DIR / "templates" / "pages" / "php_index.php"
 NODEJS_APP_TEMPLATE = BASE_DIR / "templates" / "pages" / "app.js"
-PM2_ECOSYSTEM_TEMPLATE = BASE_DIR / "templates" / "pages" / "ecosystem.config.js"
+PM2_ECOSYSTEM_TEMPLATE = BASE_DIR / "templates" / "pages" / "ecosystem.config.cjs"
 
 DATA_DIR.mkdir(exist_ok=True)
 BACKUP_DIR.mkdir(exist_ok=True)
