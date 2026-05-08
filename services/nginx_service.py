@@ -12,12 +12,13 @@ def enabled_config_path(domain: str) -> Path:
     return NGINX_ENABLED / domain
 
 
-def render_http_config(domain: str, root_path: str, site_type: str) -> str:
+def render_http_config(domain: str, root_path: str, site_type: str, port: int = None) -> str:
     index_line = {
         "html": "index index.html;",
         "php": "index index.php index.html;",
         "laravel": "index index.php index.html;",
         "ci4": "index index.php index.html;",
+        "nodejs": "",
     }[site_type]
 
     if site_type == "html":
@@ -25,6 +26,17 @@ def render_http_config(domain: str, root_path: str, site_type: str) -> str:
     location / {
         try_files $uri $uri/ =404;
     }
+"""
+    elif site_type == "nodejs":
+        location_block = f"""
+    location / {{
+        proxy_pass http://127.0.0.1:{port};
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }}
 """
     else:
         location_block = r"""
@@ -54,10 +66,10 @@ def render_http_config(domain: str, root_path: str, site_type: str) -> str:
 """
 
 
-def write_http_config(domain: str, root_path: str, site_type: str) -> tuple[Path, Path]:
+def write_http_config(domain: str, root_path: str, site_type: str, port: int = None) -> tuple[Path, Path]:
     available = available_config_path(domain)
     enabled = enabled_config_path(domain)
-    content = render_http_config(domain, root_path, site_type)
+    content = render_http_config(domain, root_path, site_type, port)
     write_text(available, content)
     if enabled.exists() or enabled.is_symlink():
         enabled.unlink()

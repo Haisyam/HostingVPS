@@ -15,13 +15,14 @@ from utils.validators import is_valid_domain, yes_no
 
 
 def prompt_site_type() -> str:
-    choices = {"1": "html", "2": "php", "3": "laravel", "4": "ci4"}
+    choices = {"1": "html", "2": "php", "3": "laravel", "4": "ci4", "5": "nodejs"}
     while True:
         section("PILIH JENIS WEBSITE")
         print("1. HTML statis")
         print("2. PHP biasa")
         print("3. Laravel")
         print("4. CodeIgniter 4")
+        print("5. Node.js (PM2)")
         value = input("Pilihan: ").strip()
         if value in choices:
             return choices[value]
@@ -45,10 +46,37 @@ def add_site_flow() -> None:
             else:
                 warn("PHP tidak diinstall. Website mungkin tidak berfungsi tanpa PHP.")
 
+    port = None
+    if site_type == "nodejs":
+        from services.nodejs_service import is_nodejs_installed, is_pm2_installed, install_nodejs, install_pm2, find_available_port
+        
+        if not is_nodejs_installed():
+            if yes_no(input("Node.js belum terinstall. Apakah Anda ingin menginstallnya sekarang? [y/n]: ")):
+                install_nodejs()
+            else:
+                warn("Node.js tidak diinstall. Backend tidak dapat dijalankan.")
+                
+        if is_nodejs_installed() and not is_pm2_installed():
+            if yes_no(input("PM2 belum terinstall. Apakah Anda ingin menginstallnya sekarang? [y/n]: ")):
+                install_pm2()
+            else:
+                warn("PM2 tidak diinstall. Backend tidak dapat dijalankan di background.")
+            
+        print("Mencari port kosong yang tersedia untuk Node.js...")
+        try:
+            port = find_available_port(3000, 4000)
+            info(f"Port yang tersedia ditemukan: {port}")
+        except Exception as e:
+            error(str(e))
+            port = int(input("Masukkan port Node.js secara manual: ").strip())
+
     notes = input("Catatan opsional: ").strip() or None
+    
+    if site_type == "nodejs":
+        notes = f"[Node Port: {port}] " + (notes or "")
 
     try:
-        paths, available, enabled = create_site(domain, site_type)
+        paths, available, enabled = create_site(domain, site_type, port)
         site_id = create_site_record(
             SiteRecord(
                 id=None,
